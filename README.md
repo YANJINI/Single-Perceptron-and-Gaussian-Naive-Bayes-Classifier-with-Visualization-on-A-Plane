@@ -7,4 +7,4 @@ From an inspiration by [Perceptron demo](https://youtu.be/wl7gVvI-HuY?t=1331) on
 
 ### How it works
 You click 
-[click to plot from class 1](./images/click-to-plot-from-class-1.gif)
+![click to plot from class 1](./images/click-to-plot-from-class-1.gif)
