@@ -101,7 +101,7 @@ class twoD_coordinates_Perceptron:
             self.ax.set_aspect('equal')
             self.ax.set_xlabel('feature 1')
             self.ax.set_ylabel('feature 2')
-            self.ax.set_title(f'iteration: {self.n_iter}, mistakes: {self.m}, n_points:{len(self.label)}, stepsize: {self.lr}')
+            self.ax.set_title(f'iteration: {self.n_iter}, max_iteration: {self.n_iters}, mistakes: {self.m}, n_points:{len(self.label)}, stepsize: {self.lr}')
 
     def _redraw_plots(self):
         for idx, y_i in enumerate(self.label):
@@ -124,3 +124,4 @@ class twoD_coordinates_Perceptron:
             return True
         else:
             return False
+
