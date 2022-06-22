@@ -1,10 +1,11 @@
 # Single-Perceptron-and-Naive-Bayes-Classifier-with-Visualization-on-A-Plane
 Comparison between single Perceptron classifier and navie Bayes classifier over labeled scatterplots on 2 dimensional plane and its visualization with matplotlib
 
-
+<br />
 ## Bacic Idea
 From an inspiration by [Perceptron demo](https://youtu.be/wl7gVvI-HuY?t=1331) on lecture 4 and [Naive Bayes demo](https://youtu.be/rqB0XWoMreU?t=2498) on lecture 10 of Kilian Weinberger's [Machine Learning for Intelligent Systems course](https://www.cs.cornell.edu/courses/cs4780/2018fa/) at Cornell University, I have built a conceptually similar interactive single Perceptron and naive Bayes demo in Python with matplotlib event handling.
 
+<br />
 ## How it works
 After you run this,
 ```ruby
@@ -23,6 +24,7 @@ Pressing enters makes the program iterate to find a right line to seperate two c
 In a non-linearly seperable case, it goes as below when the number of iterations hits the number you set. <br />
 ![Perceptron_nlseperable](/images/Perceptron_nlseperable.gif)
 
+<br />
 ## Setup
 
 ### git clone
