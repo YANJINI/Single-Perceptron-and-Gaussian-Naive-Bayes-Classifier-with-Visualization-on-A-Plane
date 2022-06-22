@@ -11,7 +11,9 @@ You click <br />
 
 ![click to plot from class 2](/images/click%20to%20plot%20from%20class%202.gif)
 
-![Perceptron](/images/Perceptron.gif)
+![Perceptron_lseperable](/images/Perceptron_lseperable.gif)
+
+![Perceptron_nlseperable](/images/Perceptron_nlseperable.gif)
 
 ### How to use (setting)
 
