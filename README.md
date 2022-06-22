@@ -5,7 +5,7 @@ Comparison between single Perceptron classifier and navie Bayes classifier over 
 ## Bacic Idea
 From an inspiration by [Perceptron demo](https://youtu.be/wl7gVvI-HuY?t=1331) on lecture 4 and [Naive Bayes demo](https://youtu.be/rqB0XWoMreU?t=2498) on lecture 10 of Kilian Weinberger's [Machine Learning for Intelligent Systems course](https://www.cs.cornell.edu/courses/cs4780/2018fa/) at Cornell University, I have built a conceptually similar interactive single Perceptron and naive Bayes demo in Python with matplotlib event handling.
 
-### How it works
+## How it works
 After you run this,
 ```ruby
 twoD_coordinates_Perceptron(n_iters=20)
@@ -23,22 +23,22 @@ Pressing enters makes the program iterate to find a right line to seperate two c
 In a non-linearly seperable case, it goes as below when the number of iterations hits the number you set. <br />
 ![Perceptron_nlseperable](/images/Perceptron_nlseperable.gif)
 
-### Setup
+## Setup
 
-#### git clone
+### git clone
 git clone to have this repository on your local machine as follows.
 ```ruby
 git clone git@github.com:YANJINI/Single-Perceptron-and-Naive-Bayes-Classifier-with-Visualization-on-A-Plane.git
 ```
 
-#### path control
+### path control
 To import modules written in this repository on your local macine, you need control path to this clone, which could be done as below.
 ```ruby
 import sys
 sys.path.extend(['/your_local_directory_to_this_clone/Single-Perceptron-and-Naive-Bayes-Classifier-with-Visualization-on-A-Plane'])
 ```
 
-#### import 
+### import 
 Import these two classifiers in another py project as below.
 ```ruby
 from Perceptron import twoD_coordinates_Perceptron
