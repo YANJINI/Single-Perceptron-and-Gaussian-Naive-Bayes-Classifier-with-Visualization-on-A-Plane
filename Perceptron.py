@@ -124,4 +124,3 @@ class twoD_coordinates_Perceptron:
             return True
         else:
             return False
-
