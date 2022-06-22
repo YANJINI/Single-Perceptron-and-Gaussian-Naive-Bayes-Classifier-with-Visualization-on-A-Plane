@@ -17,13 +17,13 @@ You click <br />
 
 #### git clone
 git clone to have this repository on your local machine as follows.
-'''ruby
+```ruby
 git clone git@github.com:YANJINI/Single-Perceptron-and-Naive-Bayes-Classifier-with-Visualization-on-A-Plane.git
-'''
+```
 
 #### Path control
 To import modules written in this repository on your local macine, you need control path to this clone, which could be done as below.
-'''ruby
+```ruby
 import sys
 sys.path.extend(['/your_local_directory_to_this_clone/Single-Perceptron-and-Naive-Bayes-Classifier-with-Visualization-on-A-Plane'])
-'''
+```
