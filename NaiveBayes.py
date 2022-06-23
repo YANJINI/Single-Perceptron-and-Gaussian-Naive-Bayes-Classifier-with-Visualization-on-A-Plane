@@ -40,39 +40,69 @@ class twoD_coordinates_GNB:
             elif self.count_enter == 1:
                 self.count_enter = 2
                 self.figure.canvas.mpl_disconnect(self.cid1)
+            elif self.count_enter == 2:
+                self.count_enter = 3
+                mean1 = [np.mean(self.labeled_coordinates[1][0]), np.mean(self.labeled_coordinates[1][1])]
+                mean2 = [np.mean(self.labeled_coordinates[-1][0]), np.mean(self.labeled_coordinates[-1][1])]
+                self.mean_list = [mean1, mean2]
 
-            else:
+                # Under assumption that stds vary from feature to feature, but are the same regardless of y,
+                # Gaussian Naive Bayes classifier has linear decision boundary.
+                # So we calculate var ofself. data points for each feature dimension, only given y=1
+                # And cov is zero under Naive Bayes Assumption. cov matrix here is just for stds
+                self.cov = [[np.var(self.labeled_coordinates[1][0]), 0], [0, np.var(self.labeled_coordinates[1][1])]]
+                self.cov2 = [[np.var(self.labeled_coordinates[-1][0]), 0], [0, np.var(self.labeled_coordinates[-1][1])]]
+
+                self.y1_proba = len(self.labeled_coordinates[1]) / (
+                            len(self.labeled_coordinates[1]) + len(self.labeled_coordinates[-1]))
+                self.y2_proba = len(self.labeled_coordinates[-1]) / (
+                            len(self.labeled_coordinates[1]) + len(self.labeled_coordinates[-1]))
+
+                print(f'mean of coordinates from class 1: {self.mean_list[0]}')
+                print(f'mean of coordinates from class 2: {self.mean_list[1]}')
+                print(f'variance of coordinates: {[self.cov[0][0], self.cov[1][1]]} (no differ from class 1 to class 2)')
+                print(f'P(Y = class 1): {self.y1_proba}, P(Y = class 2): {self.y2_proba}')
+
                 self._linear_Gaussian_Naive_Bayes()
+            else:
+                self._nonlinear_Gaussian_Naive_Bayes()
                 self.figure.canvas.mpl_disconnect(self.cid2)
-
         else:
             print('You pressed a wrong button')
 
     def _linear_Gaussian_Naive_Bayes(self):
-        mean_11 = np.mean(self.labeled_coordinates[1][0])
-        mean_21 = np.mean(self.labeled_coordinates[1][1])
-        mean_12 = np.mean(self.labeled_coordinates[-1][0])
-        mean_22 = np.mean(self.labeled_coordinates[-1][1])
-
-        # Under assumption that stds vary from feature to feature, but are the same regardless of y,
-        # Gaussian Naive Bayes classifier has linear decision boundary.
-        # So we calculate var of data points for each feature dimension, only given y=1
-        var_1 = np.var(self.labeled_coordinates[1][0])
-        var_2 = np.var(self.labeled_coordinates[1][1])
-
-        y1_proba = len(self.labeled_coordinates[1]) / (len(self.labeled_coordinates[1]) + len(self.labeled_coordinates[-1]))
-        y2_proba = len(self.labeled_coordinates[-1]) / (len(self.labeled_coordinates[1]) + len(self.labeled_coordinates[-1]))
-
-        x = np.array(range(-5, 6))
-        y = [-var_2*(mean_22-mean_21) * ((mean_12-mean_21)/var_1*x_i + np.log((y1_proba/y2_proba)) +
-                                        (mean_11**2 - mean_12**2)/(2*var_1) + (mean_21**2 - mean_22**2)/(2*var_2)) for x_i in x]
+        x = np.linspace(-5, 5, 50)
+        y = [(self.cov[1][1] / (self.mean_list[1][1]-self.mean_list[0][1])) *
+             (np.log(self.y1_proba/self.y2_proba) + ((self.mean_list[0][0]-self.mean_list[1][0])/self.cov[0][0])*xx +
+              (self.mean_list[1][0]**2 - self.mean_list[0][0]**2)/(2*self.cov[0][0]) +
+              (self.mean_list[1][1]**2 - self.mean_list[0][1]**2)/(2*self.cov[1][1])) for xx in x]
 
         plt.cla()
         self._background_figure()
         self._redraw_plots()
+        self._show_two_Gaussians_dist()
         plt.plot(x, y)
         plt.fill_between(x, -10, y, alpha=.25)
         plt.fill_between(x, y, 10, alpha=.25, color='r')
+
+    def _nonlinear_Gaussian_Naive_Bayes(self):
+        x = np.linspace(-5, 5, 50)
+        y = np.linspace(-5, 5, 50)
+        X, Y = np.meshgrid(x, y)
+
+        plt.cla()
+        self._background_figure()
+        self._redraw_plots()
+
+        # get probabilities at each point and plot contour
+        zz = np.array([(scipy.stats.multivariate_normal.pdf(np.array([xx, yy]), mean=self.mean_list[0], cov=self.cov) /
+                       scipy.stats.multivariate_normal.pdf(np.array([xx, yy]), mean=self.mean_list[1], cov=self.cov2)) *
+                       (self.y1_proba/self.y2_proba)
+                           for xx, yy in zip(np.ravel(X), np.ravel(Y))])
+
+        Z = zz.reshape(X.shape)
+
+        plt.contour(X, Y, Z, levels=[1], alpha=.5)
 
     def _background_figure(self):
         if self.count_enter == 0:
@@ -91,7 +121,8 @@ class twoD_coordinates_GNB:
             self.ax.set_aspect('equal')
             self.ax.set_xlabel('feature 1')
             self.ax.set_ylabel('feature 2')
-            self.ax.set_title('Gaussian Naive Bayes')
+            self.ax.set_title(f'Gaussian Naive Bayes, class 1: {len(self.labeled_coordinates[1])}, '
+                              f'class 2: {len(self.labeled_coordinates[-1])}')
 
     def _redraw_plots(self):
         for x, y in self.labeled_coordinates[1]:
@@ -110,3 +141,21 @@ class twoD_coordinates_GNB:
             return True
         else:
             return False
+
+    def _show_two_Gaussians_dist(self):
+        color_list = ['darkred', 'darkblue']
+
+        x = np.linspace(-5, 5, 50)
+        y = np.linspace(-5, 5, 50)
+        X, Y = np.meshgrid(x, y)
+
+        # get probabilities at each point and plot contour
+        for i in range(2):
+            zz = np.array([scipy.stats.multivariate_normal.pdf(np.array([xx, yy])
+                                                               , mean=self.mean_list[i], cov=self.cov)
+                           for xx, yy in zip(np.ravel(X), np.ravel(Y))])
+
+            Z = zz.reshape(X.shape)
+
+            CS = plt.contour(X, Y, Z, levels=3, alpha=.5, colors=color_list[i])
+            plt.clabel(CS, inline=1, fontsize=10)
