@@ -21,7 +21,7 @@ Press enter to switch to plotting from class 2. <br />
 Pressing enters makes the program iterate to find a right line to seperate two classes based on Perceptron algorithm. <br />
 ![Perceptron_lseperable](/images/Perceptron_lseperable.gif)
 
-In a non-linearly seperable case, it goes as below when the number of iterations hits the number you set. <br />
+In a typical non-linearly seperable case (XOR), it goes as below when the number of iterations hits the number you set. <br />
 ![Perceptron_nlseperable](/images/Perceptron_nlseperable.gif) <br />
 
 
