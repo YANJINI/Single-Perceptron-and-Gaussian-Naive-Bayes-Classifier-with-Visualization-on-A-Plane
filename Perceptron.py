@@ -6,7 +6,6 @@ class twoD_coordinates_Perceptron:
         self.lr = learning_rate
         self.n_iters = n_iters
         self.activation_func = self._unit_step_func
-        self.datapoint_forupdate = {}
         self.count_enter = 0
         self.which_label = 0
 
