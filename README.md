@@ -24,6 +24,9 @@ In a typical non-linearly seperable case (XOR), it goes as below when the number
 
 ### Linear Gaussian Naive Bayes Classifier
 
+
+
+
 ### Non-linear Gaussian Naive Bayes Classifier
 
 
