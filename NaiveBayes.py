@@ -102,7 +102,8 @@ class twoD_coordinates_GNB:
 
         Z = zz.reshape(X.shape)
 
-        plt.contour(X, Y, Z, levels=[1], alpha=.5)
+        CS = plt.contour(X, Y, Z, levels=[1], alpha=.5)
+        plt.clabel(CS, inline=1, fontsize=10)
 
     def _background_figure(self):
         if self.count_enter == 0:
@@ -115,13 +116,21 @@ class twoD_coordinates_GNB:
             self.ax.set_title('click to plot from class 1. Please press enter when finished.')
         elif self.count_enter == 1:
             self.ax.set_title('click to plot from class 2. please double enter to start Naive Bayes.')
+        elif self.count_enter == 2:
+            self.ax.set_aspect(1)
+            self.ax.set(xlim=[-5, 5], ylim=[-5, 5])
+            self.ax.set_aspect('equal')
+            self.ax.set_xlabel('feature 1')
+            self.ax.set_ylabel('feature 2')
+            self.ax.set_title(f'linear Gaussian Naive Bayes, class 1: {len(self.labeled_coordinates[1])}, '
+                              f'class 2: {len(self.labeled_coordinates[-1])}')
         else:
             self.ax.set_aspect(1)
             self.ax.set(xlim=[-5, 5], ylim=[-5, 5])
             self.ax.set_aspect('equal')
             self.ax.set_xlabel('feature 1')
             self.ax.set_ylabel('feature 2')
-            self.ax.set_title(f'Gaussian Naive Bayes, class 1: {len(self.labeled_coordinates[1])}, '
+            self.ax.set_title(f'nonlinear Gaussian Naive Bayes, class 1: {len(self.labeled_coordinates[1])}, '
                               f'class 2: {len(self.labeled_coordinates[-1])}')
 
     def _redraw_plots(self):
@@ -157,5 +166,5 @@ class twoD_coordinates_GNB:
 
             Z = zz.reshape(X.shape)
 
-            CS = plt.contour(X, Y, Z, levels=3, alpha=.5, colors=color_list[i])
+            CS = plt.contour(X, Y, Z, levels=[0.005, 0.05, 0.2], alpha=.5, colors=color_list[i])
             plt.clabel(CS, inline=1, fontsize=10)
