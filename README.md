@@ -1,5 +1,5 @@
 # Single-Perceptron-and-Gaussian-Naive-Bayes-Classifier-with-Visualization-on-A-Plane
-Comparison between single Perceptron classifier and, linear and non-linear Gaussian navie Bayes classifier over labeled scatterplots on 2 dimensional plane and its visualization with matplotlib <br />
+Comparison between single Perceptron classifier and, linear and non-linear Gaussian navie Bayes classifier over labeled scatterplots on a plane and its visualization with matplotlib <br />
 
 
 ## Bacic Idea
