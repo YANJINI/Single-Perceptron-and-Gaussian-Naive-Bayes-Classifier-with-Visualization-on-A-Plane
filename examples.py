@@ -6,3 +6,5 @@ a = twoD_coordinates_Perceptron(n_iters=20)
 a.labeled_coordinates()
 
 a = twoD_coordinates_GNB()
+
+d
