@@ -40,33 +40,34 @@ class twoD_coordinates_GNB:
             elif self.count_enter == 1:
                 self.count_enter = 2
                 self.figure.canvas.mpl_disconnect(self.cid1)
+                self.labeled_coordinates[1] = np.array(self.labeled_coordinates[1])
+                self.labeled_coordinates[-1] = np.array(self.labeled_coordinates[-1])
+
             elif self.count_enter == 2:
-                self.count_enter = 3
-                mean1 = [np.mean(self.labeled_coordinates[1][0]), np.mean(self.labeled_coordinates[1][1])]
-                mean2 = [np.mean(self.labeled_coordinates[-1][0]), np.mean(self.labeled_coordinates[-1][1])]
+                mean1 = [np.mean(self.labeled_coordinates[1][:, 0]), np.mean(self.labeled_coordinates[1][:, 1])]
+                mean2 = [np.mean(self.labeled_coordinates[-1][:, 0]), np.mean(self.labeled_coordinates[-1][:, 1])]
                 self.mean_list = [mean1, mean2]
 
                 # Under assumption that stds vary from feature to feature, but are the same regardless of y,
                 # Gaussian Naive Bayes classifier has linear decision boundary.
                 # So we calculate var ofself. data points for each feature dimension, only given y=1
                 # And cov is zero under Naive Bayes Assumption. cov matrix here is just for stds
-                self.cov = [[np.var(self.labeled_coordinates[1][0]), 0], [0, np.var(self.labeled_coordinates[1][1])]]
-                self.cov2 = [[np.var(self.labeled_coordinates[-1][0]), 0], [0, np.var(self.labeled_coordinates[-1][1])]]
+                self.cov = [[np.var(self.labeled_coordinates[1][:, 0]), 0], [0, np.var(self.labeled_coordinates[1][:, 1])]]
+                self.cov2 = [[np.var(self.labeled_coordinates[-1][:, 0]), 0], [0, np.var(self.labeled_coordinates[-1][:, 1])]]
+                self.cov_list = [self.cov, self.cov2]
 
                 self.y1_proba = len(self.labeled_coordinates[1]) / (
                             len(self.labeled_coordinates[1]) + len(self.labeled_coordinates[-1]))
                 self.y2_proba = len(self.labeled_coordinates[-1]) / (
                             len(self.labeled_coordinates[1]) + len(self.labeled_coordinates[-1]))
 
-                print(f'mean of coordinates from class 1: {self.mean_list[0]}')
-                print(f'mean of coordinates from class 2: {self.mean_list[1]}')
-                print(f'variance of coordinates: {[self.cov[0][0], self.cov[1][1]]} (no differ from class 1 to class 2)')
-                print(f'P(Y = class 1): {self.y1_proba}, P(Y = class 2): {self.y2_proba}')
-
                 self._linear_Gaussian_Naive_Bayes()
+                self.count_enter = 3
+
             else:
                 self._nonlinear_Gaussian_Naive_Bayes()
                 self.figure.canvas.mpl_disconnect(self.cid2)
+
         else:
             print('You pressed a wrong button')
 
@@ -80,10 +81,15 @@ class twoD_coordinates_GNB:
         plt.cla()
         self._background_figure()
         self._redraw_plots()
-        self._show_two_Gaussians_dist()
+        self._show_two_Gaussians_dist(is_linear='y')
         plt.plot(x, y)
         plt.fill_between(x, -10, y, alpha=.25)
         plt.fill_between(x, y, 10, alpha=.25, color='r')
+
+        print(f'mean of coordinates from class 1: {self.mean_list[0]}')
+        print(f'mean of coordinates from class 2: {self.mean_list[1]}')
+        print(f'variance of coordinates: {[self.cov[0][0], self.cov[1][1]]} (no differ from class 1 to class 2)')
+        print(f'P(Y = class 1): {self.y1_proba}, P(Y = class 2): {self.y2_proba}')
 
     def _nonlinear_Gaussian_Naive_Bayes(self):
         x = np.linspace(-5, 5, 50)
@@ -93,6 +99,7 @@ class twoD_coordinates_GNB:
         plt.cla()
         self._background_figure()
         self._redraw_plots()
+        self._show_two_Gaussians_dist(is_linear='n')
 
         # get probabilities at each point and plot contour
         zz = np.array([(scipy.stats.multivariate_normal.pdf(np.array([xx, yy]), mean=self.mean_list[0], cov=self.cov) /
@@ -102,7 +109,7 @@ class twoD_coordinates_GNB:
 
         Z = zz.reshape(X.shape)
 
-        CS = plt.contour(X, Y, Z, levels=[1], alpha=.5)
+        CS = plt.contour(X, Y, Z, levels=[1], alpha=.8)
         plt.clabel(CS, inline=1, fontsize=10)
 
     def _background_figure(self):
@@ -114,8 +121,10 @@ class twoD_coordinates_GNB:
             self.ax.set_xlabel('feature 1')
             self.ax.set_ylabel('feature 2')
             self.ax.set_title('click to plot from class 1. Please press enter when finished.')
+
         elif self.count_enter == 1:
-            self.ax.set_title('click to plot from class 2. please double enter to start Naive Bayes.')
+            self.ax.set_title('click to plot from class 2. Please double enter to start GNBs.')
+
         elif self.count_enter == 2:
             self.ax.set_aspect(1)
             self.ax.set(xlim=[-5, 5], ylim=[-5, 5])
@@ -123,7 +132,8 @@ class twoD_coordinates_GNB:
             self.ax.set_xlabel('feature 1')
             self.ax.set_ylabel('feature 2')
             self.ax.set_title(f'linear Gaussian Naive Bayes, class 1: {len(self.labeled_coordinates[1])}, '
-                              f'class 2: {len(self.labeled_coordinates[-1])}')
+                              f'class 2: {len(self.labeled_coordinates[-1])}\nPlease enter to start non-linear GNB')
+
         else:
             self.ax.set_aspect(1)
             self.ax.set(xlim=[-5, 5], ylim=[-5, 5])
@@ -151,20 +161,34 @@ class twoD_coordinates_GNB:
         else:
             return False
 
-    def _show_two_Gaussians_dist(self):
+    def _show_two_Gaussians_dist(self, is_linear):
         color_list = ['darkred', 'darkblue']
 
         x = np.linspace(-5, 5, 50)
         y = np.linspace(-5, 5, 50)
         X, Y = np.meshgrid(x, y)
 
-        # get probabilities at each point and plot contour
-        for i in range(2):
-            zz = np.array([scipy.stats.multivariate_normal.pdf(np.array([xx, yy])
-                                                               , mean=self.mean_list[i], cov=self.cov)
-                           for xx, yy in zip(np.ravel(X), np.ravel(Y))])
+        if is_linear == 'y':
+            # get probabilities at each point and plot contour
+            for i in range(2):
+                zz = np.array([scipy.stats.multivariate_normal.pdf(np.array([xx, yy])
+                                                                   , mean=self.mean_list[i], cov=self.cov)
+                               for xx, yy in zip(np.ravel(X), np.ravel(Y))])
 
-            Z = zz.reshape(X.shape)
+                Z = zz.reshape(X.shape)
 
-            CS = plt.contour(X, Y, Z, levels=[0.005, 0.05, 0.2], alpha=.5, colors=color_list[i])
-            plt.clabel(CS, inline=1, fontsize=10)
+                CS = plt.contour(X, Y, Z, levels=[0.005, 0.05, 0.2], alpha=.5, colors=color_list[i])
+                plt.clabel(CS, inline=1, fontsize=10)
+
+        elif is_linear == 'n':
+            for i in range(2):
+                zz = np.array([scipy.stats.multivariate_normal.pdf(np.array([xx, yy])
+                                                                   , mean=self.mean_list[i], cov=self.cov_list[i])
+                               for xx, yy in zip(np.ravel(X), np.ravel(Y))])
+
+                Z = zz.reshape(X.shape)
+
+                CS = plt.contour(X, Y, Z, levels=[0.005, 0.05, 0.2], alpha=.5, colors=color_list[i])
+                plt.clabel(CS, inline=1, fontsize=10)
+
+a = twoD_coordinates_GNB()
