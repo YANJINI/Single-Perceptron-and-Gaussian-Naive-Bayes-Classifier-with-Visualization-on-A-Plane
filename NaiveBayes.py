@@ -177,7 +177,7 @@ class twoD_coordinates_GNB:
 
                 Z = zz.reshape(X.shape)
 
-                CS = plt.contour(X, Y, Z, levels=[0.005, 0.05, 0.2], alpha=.5, colors=color_list[i])
+                CS = plt.contour(X, Y, Z, levels=[0.005, 0.05, 0.2], alpha=.3, colors=color_list[i])
                 plt.clabel(CS, inline=1, fontsize=10)
 
         elif is_linear == 'n':
@@ -188,7 +188,5 @@ class twoD_coordinates_GNB:
 
                 Z = zz.reshape(X.shape)
 
-                CS = plt.contour(X, Y, Z, levels=[0.005, 0.05, 0.2], alpha=.5, colors=color_list[i])
+                CS = plt.contour(X, Y, Z, levels=[0.005, 0.05, 0.2], alpha=.3, colors=color_list[i])
                 plt.clabel(CS, inline=1, fontsize=10)
-
-a = twoD_coordinates_GNB()
