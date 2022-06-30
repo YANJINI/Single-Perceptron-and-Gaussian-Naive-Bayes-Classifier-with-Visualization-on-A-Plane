@@ -21,11 +21,15 @@ Pressing enters makes the program iterate to find a right line to seperate two c
 
 In a typical non-linearly seperable case (XOR), it goes as below when the number of iterations hits the number you set. <br />
 ![Perceptron_nlseperable](/images/Perceptron_nlseperable.gif) <br />
+<br />
+<br />
 
 ### Linear and Gaussian Naive Bayes Classifier
 When each of those decomposed one-dimension feature distributions, P(x_i | y) follows Gaussian distribution and their variances are assumed to be the same across all labels (in this case when y=1 and y=-1), we can derive the closed form of a line that represents 50:50 case of falling into the two labels. In other words, Gaussian Naive Bayes classifier's decision boundary is linear in this case. <br />
 
 ![linear_GNB](/images/linear_GNB.gif) <br />
+<br />
+<br />
 
 ### Non-linear Gaussian Naive Bayes Classifier
 When the assumption about variances given label is violated, the decision boundary is not linear and there is no closed form of this.
