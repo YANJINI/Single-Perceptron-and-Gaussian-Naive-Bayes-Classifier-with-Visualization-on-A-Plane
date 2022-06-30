@@ -109,7 +109,7 @@ class twoD_coordinates_GNB:
 
         Z = zz.reshape(X.shape)
 
-        CS = plt.contour(X, Y, Z, levels=[1], alpha=.8)
+        CS = plt.contour(X, Y, Z, levels=[1], alpha=.8, colors='green')
         plt.clabel(CS, inline=1, fontsize=10)
 
     def _background_figure(self):
